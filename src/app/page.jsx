@@ -15,20 +15,26 @@ export default function Home() {
 
   const fetchTicket = async (code) => {
     try {
-      const response = await fetch(`/api/verifyTicket?code=${code}`);
+      const response = await fetch('/api/verifyTicket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
+      });
       const data = await response.json();
       const now = new Date();
       const time = now.toLocaleTimeString();
-
+  
       const scanData = {
         code: data.code,
         placeno: data.placeno,
         promo: data.promo,
         time,
       };
-
+  
       setLastScan(scanData);
-
+  
       const updatedHistory = [scanData, ...scanHistory].slice(0, 10);
       setScanHistory(updatedHistory);
       localStorage.setItem('scanHistory', JSON.stringify(updatedHistory));
