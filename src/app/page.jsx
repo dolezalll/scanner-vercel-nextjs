@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Card from '../components/Card';
-import ScanHistory from '../components/ScanHistory';
+import ScanHistory from '@/components/ScanHistory';
 
 export default function Home() {
   const [lastScan, setLastScan] = useState(null);
