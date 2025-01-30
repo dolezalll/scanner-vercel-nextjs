@@ -63,7 +63,10 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const { code } = await request.json();
+  const rawBody = await request.text();
+  const params = new URLSearchParams(rawBody);
+  const code = params.get('code');
+
   if (!code) {
     return new Response(JSON.stringify({ error: "Chybí kód." }), { status: 400 });
   }
