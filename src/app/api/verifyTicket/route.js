@@ -25,6 +25,8 @@ function loadJSONData() {
 
 const JSONData = loadJSONData();
 
+
+
 export async function GET(request) {
   const code = request.nextUrl.searchParams.get('code')?.trim();
 
@@ -53,6 +55,31 @@ export async function GET(request) {
 
   return new Response(JSON.stringify({
     code: code,
+    status: "Platný",
+    placeno: ticket.PLACENO,
+    promo: ticket.PROMO,
+    poznamka: ticket.POZNAMKA
+  }), { status: 200 });
+}
+
+export async function POST(request) {
+  const { code } = await request.json();
+  if (!code) {
+    return new Response(JSON.stringify({ error: "Chybí kód." }), { status: 400 });
+  }
+
+  // Podobná logika jako v GET:
+  if (!JSONData || JSONData.length === 0) {
+    return new Response(JSON.stringify({ error: "Data nejsou dostupná." }), { status: 500 });
+  }
+
+  const ticket = JSONData.find(row => row.KODY === Number.parseInt(code));
+  if (!ticket) {
+    return new Response(JSON.stringify({ code, status: "Neplatný" }), { status: 200 });
+  }
+
+  return new Response(JSON.stringify({
+    code,
     status: "Platný",
     placeno: ticket.PLACENO,
     promo: ticket.PROMO,
